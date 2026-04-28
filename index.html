@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Stretch and breathe</title>
+<meta name='theme-color' content='#fff7ed'>
+<style>
+:root{--bg:#fff7ed;--surface:#fff;--border:#f0dcc8;--text:#1c1009;--muted:#9c7b60;--accent:#f97316;--accent-dim:rgba(249,115,22,.1);--sage:#059669;--sage-dim:rgba(5,150,105,.12)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-weight:300}button{font:inherit}#app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative;overflow:hidden}.screen{min-height:100vh;padding:22px 16px}.hidden{display:none!important}h1{font-family:Georgia,serif;font-size:38px;font-weight:300;line-height:1;margin:0 0 8px}h1 em{color:var(--accent)}.sub{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}.cats{display:grid;grid-template-columns:1fr 1fr;gap:9px}.cat{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 13px;text-align:left;cursor:pointer;box-shadow:0 2px 8px rgba(249,115,22,.06)}.cat:hover{border-color:var(--accent)}.cat.full{grid-column:1/-1}.icon{font-size:22px}.name{font-family:Georgia,serif;font-size:17px;margin-top:5px}.count{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:5px}.top{display:flex;align-items:center;justify-content:space-between;padding:42px 22px 8px}.back,.pillbtn,.info,.small{border:1px solid var(--border);border-radius:999px;background:#fff;color:var(--muted);padding:8px 14px;cursor:pointer}.catpill{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}.stage{display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px 24px 0}.exname{font-family:Georgia,serif;font-size:42px;line-height:1.02;margin:0 0 10px}.cue{font-size:14px;color:var(--muted);font-style:italic;line-height:1.45;min-height:42px}.pose{font-size:54px;margin:18px 0 12px}.ring{width:148px;height:148px;border-radius:50%;border:2px solid var(--border);display:grid;place-items:center;position:relative;background:radial-gradient(circle,rgba(249,115,22,.08),transparent 68%)}.time{font-family:Georgia,serif;font-size:30px}.label{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-top:4px}.play{position:absolute;bottom:18px;border:0;background:var(--accent);color:#fff;border-radius:50%;width:42px;height:42px;cursor:pointer}.nav{display:flex;align-items:center;justify-content:center;gap:14px;margin:18px 0}.ctrl{width:46px;height:46px;border-radius:50%;border:1px solid var(--border);background:#fff;cursor:pointer}.dots{display:flex;gap:5px;max-width:250px;flex-wrap:wrap;justify-content:center}.dot{width:5px;height:5px;border-radius:50%;background:var(--border)}.dot.cur{width:17px;border-radius:99px;background:var(--accent)}.dot.done{background:var(--sage)}.row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:12px 20px}.pillbtn.on,.small.on{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}.overlay{position:fixed;inset:0;background:rgba(28,16,9,.38);backdrop-filter:blur(5px);display:none}.drawer{position:fixed;left:50%;bottom:0;transform:translateX(-50%) translateY(105%);width:100%;max-width:480px;max-height:75vh;overflow:auto;background:#fff;border-top:2px solid var(--accent);border-radius:22px 22px 0 0;padding:26px 24px 44px;transition:.25s;box-shadow:0 -4px 30px rgba(249,115,22,.12)}.drawer.open{transform:translateX(-50%) translateY(0)}.overlay.show{display:block}.drawer h2{font-family:Georgia,serif;font-weight:400;margin:0 0 6px}.drawer .dcue{color:var(--accent);font-style:italic;font-size:13px;margin-bottom:16px}.drawer .body{white-space:pre-line;line-height:1.75;color:#5c4030}.complete{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border:2px solid var(--accent);border-radius:22px;padding:30px 32px;text-align:center;box-shadow:0 8px 40px rgba(249,115,22,.2)}.complete h2{font-family:Georgia,serif;font-weight:400;margin:8px 0}.muted{color:var(--muted)}
+</style>
+</head>
+<body>
+<div id='app'>
+<section id='home' class='screen'><h1>Stretch &amp;<br><em>breathe</em></h1><p class='sub'>Choose a routine</p><div id='cats' class='cats'></div></section>
+<section id='ex' class='hidden'><div class='top'><button class='back' id='back'>← Back</button><span id='catpill' class='catpill'></span></div><div class='stage'><h2 id='exname' class='exname'>-</h2><div id='cue' class='cue'>-</div><div id='pose' class='pose'>🧘</div><div class='ring'><div><div id='time' class='time'>0:45</div><div id='label' class='label'>paused</div></div><button id='play' class='play'>▶</button></div></div><div class='nav'><button id='prev' class='ctrl'>←</button><div id='dots' class='dots'></div><button id='next' class='ctrl'>→</button></div><div class='row'><button id='info' class='info'>ⓘ How to do this</button></div><div class='row'><button id='auto' class='pillbtn on'>Auto</button><button id='manual' class='pillbtn'>Manual</button></div><div id='durrow' class='row'><button class='small' data-dur='20'>20s</button><button class='small' data-dur='30'>30s</button><button class='small on' data-dur='45'>45s</button><button class='small' data-dur='60'>60s</button><button class='small' data-dur='90'>1:30</button><button class='small' data-dur='120'>2:00</button></div><div class='row'><button id='bell' class='small on'>🎗 Chime between exercises</button></div></section>
+<div id='ov' class='overlay'></div><aside id='drawer' class='drawer'><h2 id='dtitle'>-</h2><div id='dcue' class='dcue'>-</div><div id='dbody' class='body'>-</div><button id='close' class='back' style='width:100%;margin-top:22px'>Close</button></aside><div id='done' class='complete hidden'><div style='font-size:42px'>🌿</div><h2>Session complete</h2><p class='muted'>Well done. Take a breath.</p><button id='donebtn' class='pillbtn on'>Done</button></div>
+</div>
+<script>
+const pose={standing:'🧍','arms-up':'🙆','elbows-out':'👐','arms-wide':'↔️','prone-up':'🐍','all-fours':'🐈','cat-back':'🐈‍⬛','childs-pose':'🧘','thread':'🪡','supine':'🛌','supine-bent':'🛌','bridge':'🌉','side-lying':'↩️','seated-twist':'🔄','squat':'🏋️','plank':'▬','prone-flat':'⬇️','kneeling-fwd':'🙏','neck-tuck':'🦢','forward-bend':'🙇'};
+const DATA={
+'Reset (wryless)':{icon:'🦢',defaultDur:40,exercises:[
+['Chin tuck','Push back with hand on chin - 3 sec, 8-10 reps','neck-tuck',`Sit or stand tall. Tuck your chin back, creating a slight double-chin effect, and simultaneously place your hand on your chin, gently pushing back.
+
+Hold the resistance for 3 seconds, then release.
+
+This activates the deep neck flexors - the muscles that are chronically switched off in upper crossed syndrome and wry neck. The goal is retraction, not tilting.`],
+['Neck stretch (left)','Left ear to left shoulder - hold 20-30 sec','neck-tuck',`Sit or stand tall. Let your left ear slowly move toward your left shoulder.
+
+Place your left hand lightly on top of your head to extend the stretch - never pull. Let gravity do most of the work.
+
+Hold and breathe into the stretch along the right side of the neck.`],
+['Neck stretch (right)','Right ear to right shoulder - hold 20-30 sec','neck-tuck',`Now the right side. Let your right ear slowly move toward your right shoulder.
+
+Place your right hand lightly on top of your head - never pull.
+
+Hold and breathe into the stretch along the left side of the neck. Release slowly and return to centre.`],
+['Pec doorframe stretch','Step through doorframe - hold 20-30 sec','arms-wide',`Stand in a doorway. Place both arms on the door frame, elbows at roughly 90 degrees.
+
+Step one foot forward through the doorway and lean in gently until you feel a stretch across the chest and front of the shoulders.
+
+Tight pectorals pull the shoulders forward and contribute to forward head posture.`],
+['Fascia release (left)','Left hand on ribs, right arm explores','arms-wide',`Place your left hand firmly over the left side of your ribs. Apply gentle pressure to grip the skin and fascia.
+
+Move your right arm in different directions: slow circles, sweeping up and across.
+
+This mobilises thoracic restriction that often accompanies upper crossed syndrome.`],
+['Fascia release (right)','Right hand on ribs, left arm explores','arms-wide',`Now switch. Place your right hand firmly over the right side of your ribs.
+
+Move your left arm in slow, exploratory circles - overhead, out to the side, down and back.
+
+The right hand grip stays constant while the left arm creates movement through the fascia.`],
+['Y raises','Arms at 30° - lift and hold 2 sec, 10-12 reps','prone-flat',`Lie face down with your forehead resting on a folded towel or pillow. Extend both arms out at roughly 30 degrees from your spine, making a Y shape. Thumbs pointing up.
+
+Lift both arms off the floor, squeezing the lower trapezius. Hold for 2 seconds, then lower slowly.`],
+['T raises','Arms at 90° - lift and hold 2 sec, 10-12 reps','prone-flat',`Lie face down. Extend both arms straight out to the sides at shoulder height, making a T shape. Thumbs pointing up.
+
+Lift both arms off the floor, squeezing the mid-trapezius and rhomboids. Hold for 2 seconds, then lower with control.`],
+['W raises','Goalpost position - lift and hold 2 sec, 10-12 reps','prone-flat',`Lie face down. Bend your elbows to 90 degrees and position your upper arms at roughly 45 degrees from your body, like a goalpost. Thumbs pointing up.
+
+Lift your elbows off the floor by squeezing the lower traps and externally rotating the shoulders.`],
+['Open book lying (left)','Lie on right side, left arm opens back','side-lying',`Lie on your right side with knees stacked and bent, both arms extended forward.
+
+Keep your right arm and knees in place. Slowly rotate your left arm up and over, opening your chest toward the ceiling.
+
+Let your gaze follow your left hand. Hold at end range and breathe.`],
+['Open book lying (right)','Lie on left side, right arm opens back','side-lying',`Now lie on your left side, knees stacked and bent, both arms extended forward.
+
+Keep your left arm and knees in place. Slowly rotate your right arm up and over, opening your chest toward the ceiling.
+
+Let your gaze follow your right hand. Hold at end range and breathe.`],
+['Thread the needle (left)','Left hand behind neck - thread and rotate','thread',`On all fours. Place your left hand behind your neck.
+
+Rotate your left elbow toward the ceiling, lifting and opening the mid-back. Then reverse, threading the elbow down and under your chest toward the right side.`],
+['Thread the needle (right)','Right hand behind neck - thread and rotate','thread',`Now the right side. Place your right hand behind your neck.
+
+Rotate your right elbow toward the ceiling, then thread it down and under your chest toward the left side.
+
+Focus on thoracic rotation, not just neck or shoulder movement.`]
+]},
+'5-min wake-up':{icon:'☀️',defaultDur:30,exercises:[
+['Heel bouncing','Light springy bounce - 30 sec','standing',`Stand with a soft bend in the knees. Let your heels lift and lower in a light, springy rhythm - nothing forceful, just bouncing gently.
+
+Let your arms hang loosely and swing a little.`],
+['Spinal sway','Gentle side-to-side shift - 30 sec','standing',`Stand with feet a little wider than hip-width. Gently shift your weight from side to side, letting your spine follow the movement.
+
+Let it be fluid - hips, waist, and shoulders all moving in a wave.`],
+['Arm flops','Let arms twist and swing - 30 sec','arms-wide',`Stand with feet hip-width. Rotate your torso left and right, letting your arms flop loosely.
+
+Keep everything relaxed. The arms are completely passive.`],
+['Hold the globe','Slow knee bounce, arms holding a globe - 30 sec','squat',`Stand with feet slightly wide, knees soft. Bring your arms out in front as if holding a large, gentle globe between your hands.
+
+Bounce slowly through the knees. The focus is stillness in the upper body and gentle movement in the lower.`],
+['Face energiser','Scrunch, release, and tap - 30 sec','neck-tuck',`Scrunch your whole face tight - eyes, nose, mouth, forehead. Hold for 2 seconds, then release completely.
+
+Repeat 3-4 times, then use your fingertips to gently tap all over your face.`],
+['Windmill arms','Slow arm circles, whole body soft - 30 sec','arms-wide',`Stand with feet hip-width. Let one arm sweep in a full, slow circle from front to overhead to back, then the other.
+
+Alternate in a relaxed windmill motion.`],
+['Fascia release (left)','Left hand on ribs, right arm explores - 30 sec','arms-wide',`Place your left hand firmly on the left side of your ribs, gripping the skin gently.
+
+Let your right arm move in slow, exploratory circles - overhead, out to the side, down and back.`],
+['Fascia release (right)','Right hand on ribs, left arm explores - 30 sec','arms-wide',`Now switch. Place your right hand firmly on the right side of your ribs.
+
+Let your left arm move in slow, exploratory circles - overhead, out to the side, down and back.`],
+['Qigong arm swings','Arms swing like pendulums - stay loose - 30 sec','arms-wide',`Stand with feet hip-width, knees slightly soft. Let both arms swing forward and back like pendulums - completely relaxed.
+
+Let the swing build momentum naturally.`],
+['Open book twist (left)','Lie on right side, left arm opens back - 30 sec','side-lying',`Lie on your right side with knees stacked and bent, both arms extended forward.
+
+Keep your right arm and knees still. Slowly rotate your left arm up and over, following it with your gaze.`],
+['Open book twist (right)','Lie on left side, right arm opens back - 30 sec','side-lying',`Now lie on your left side, knees stacked and bent.
+
+Keep your left arm and knees still. Slowly rotate your right arm up and over until your chest opens toward the ceiling.`]
+]},
+'Spine mobility':{icon:'🌀',defaultDur:45,exercises:[
+['Prayer stretch (left)','Left side - push 5 sec, relax 5 sec','kneeling-fwd',`Elbows on a bed or table, hands together, knees positioned further back.
+
+Drop through the movement to mobilise the thoracic spine. Push down into the surface and hold for 5 seconds, then relax for 5 seconds. Focus on the left side.`],
+['Prayer stretch (right)','Right side - push 5 sec, relax 5 sec','kneeling-fwd',`Same movement, now focusing on the right side. Elbows on a bed or table, hands together, knees further back.
+
+Push down into the surface for 5 seconds, then relax for 5 seconds. Lean or shift slightly right.`],
+['Chair rotation (left)','Rotate left - hold and breathe','seated-twist',`Seated at your desk or in a chair. Reach your right arm across to hook onto the left side of the chair for support.
+
+Rotate your torso to the left - not just the neck. Go slowly and hold at end range for a few breaths.`],
+['Chair rotation (right)','Rotate right - hold and breathe','seated-twist',`Seated at your desk or in a chair. Reach your left arm across to hook onto the right side of the chair for support.
+
+Rotate your torso to the right - not just the neck. Go slowly and hold at end range for a few breaths.`],
+['Fascia release (left)','Left hand on ribs, right arm explores','arms-wide',`Place your left hand firmly over the left side of your ribs. Apply gentle pressure to grip the skin and fascia.
+
+Move your right arm in different directions: slow forward circles, backward circles, sweeping up and across.`],
+['Fascia release (right)','Right hand on ribs, left arm explores','arms-wide',`Now switch sides. Place your right hand firmly over the right side of your ribs.
+
+Move your left arm in different directions: slow circles, sweeping up and across.`],
+['Cat-cow','Flow with your breath - 10 cycles','cat-back',`On all fours - wrists under shoulders, knees under hips.
+
+Cow: inhale, let your belly drop, lift your head and tailbone.
+Cat: exhale, press the floor away, round your spine, tuck chin and tailbone.`],
+['Child’s pose + walk hands','Walk hands left and right - hold each','childs-pose',`Start in child's pose - hips back toward heels, arms extended in front.
+
+Walk both hands to the right and hold, feeling the stretch open along the left side of your back.
+
+Return to centre, then walk hands to the left and hold.`],
+['Open book lying (left)','Lie on right side, left arm opens back','side-lying',`Lie on your right side with knees stacked and bent, both arms extended forward.
+
+Keep your right arm and knees in place. Slowly rotate your left arm up and over, opening your chest toward the ceiling.`],
+['Open book lying (right)','Lie on left side, right arm opens back','side-lying',`Now lie on your left side, knees stacked and bent, both arms extended forward.
+
+Keep your left arm and knees in place. Slowly rotate your right arm up and over, opening your chest toward the ceiling.`],
+['Thread the needle (left)','Left hand behind neck - thread and rotate','thread',`On all fours. Place your left hand behind your neck.
+
+Rotate your left elbow toward the ceiling, lifting and opening the mid-back. Then reverse, threading the elbow down and under your chest.`],
+['Thread the needle (right)','Right hand behind neck - thread and rotate','thread',`Now the right side. Place your right hand behind your neck.
+
+Rotate your right elbow toward the ceiling, then thread it down and under your chest toward the left side.`],
+['Yoga step-out pose','Fold, walk out, step forward, open book each side','forward-bend',`Stand and bend forward from the hips. Walk your hands out in front until your body forms an angle.
+
+Step one foot forward into a lunge position. From here, do an open book on each side.`],
+['Pelvic tilt','Flatten and arch lower back - slow reps','supine-bent',`Lie on your back with knees bent and feet flat.
+
+Flatten: gently press your lower back into the floor by tilting your pelvis. Hold 3-5 seconds.
+
+Arch: release and let a small arch return. Hold 3-5 seconds.`],
+['Cobra','Hold and breathe - focus on extension','prone-up',`Lie face down with your hands under your shoulders, fingers pointing forward.
+
+Press through your palms and lift your chest off the floor. Keep your hips grounded. Maintain spinal extension.`]
+]},
+'Spine strength':{icon:'💪',defaultDur:45,exercises:[
+['Plate hold','Bring shoulder blades together and apart','arms-wide',`Stand with arms extended at collarbone level, palms facing up, thumbs pointing back.
+
+Actively move your shoulder blades together, then apart. This targets mid-back muscles, erector spinae, and mid/lower trapezius.`],
+['Hands on neck opener','Elbows forward then back - don’t pump','elbows-out',`Stand tall and place both hands behind your head, elbows pointing forward.
+
+Slowly bring the elbows back as far as comfortable, opening the chest and upper back. Hold briefly, then return forward.`],
+['Thread the needle (left)','Left hand behind neck - rotate and lift','thread',`Start on all fours. Place your left hand behind your neck, right hand on the floor.
+
+Rotate through the mid-back, lifting your left elbow toward the ceiling.`],
+['Thread the needle (right)','Right hand behind neck - rotate and lift','thread',`Now the right side. Place your right hand behind your neck, left hand on the floor.
+
+Rotate through the mid-back, lifting your right elbow toward the ceiling.`],
+['Scorpion (left leg)','Lift left leg, reach over to the right','prone-flat',`Lie face down with arms in an L-shape in front, palms down.
+
+Lift your left leg up, reaching as high as comfortable. Move the leg past your midline and aim to reach the right side.`],
+['Scorpion (right leg)','Lift right leg, reach over to the left','prone-flat',`Now the right leg. Lie face down with arms in an L-shape in front, palms down.
+
+Lift your right leg up, reaching as high as comfortable. Move the leg past your midline and aim to reach the left side.`],
+['Face-down XY (thumbs up)','Thumbs up, slow lift - hold pause','prone-flat',`Lie face down with your shoulders in external rotation - thumbs pointing up toward the ceiling.
+
+Retract your shoulder blades only, or lift your head and chest slightly while retracting. Perform slowly with deliberate pauses.`],
+['Cobra + knee-up (left)','Left knee out to the side - hold','prone-up',`Start in cobra pose. Once settled in the extension, bring your left knee up and out to the side.
+
+Hold and feel the deep hip and spinal stretch on the left.`],
+['Cobra + knee-up (right)','Right knee out to the side - hold','prone-up',`Back into cobra pose. Now bring your right knee up and out to the side.
+
+Hold here and feel the deep hip and spinal stretch on the right.`],
+['Bridge','Hips up, hold 5 sec - slow down','bridge',`Lie on your back, knees bent, feet flat and hip-width apart.
+
+Press through your feet and lift your hips toward the ceiling. Squeeze your glutes at the top. Hold for 5 seconds.`],
+['Partial curl','Slow crunch - hold 2 sec at top','supine-bent',`Lie on your back, knees bent, feet flat, hands behind your head but not pulling.
+
+On an exhale, curl only your head and shoulders off the floor. Hold for 2 seconds at the top.`],
+['Hamstring stretch (left)','Straighten left leg, pull toward you - hold 20-30 sec','forward-bend',`Lie on your back, knees bent, feet flat.
+
+Straighten your left leg and gently pull it toward you, holding behind the left thigh or calf.`],
+['Hamstring stretch (right)','Straighten right leg, pull toward you - hold 20-30 sec','forward-bend',`Now the right leg. Lie on your back, left knee bent, right leg extended.
+
+Gently pull the right leg toward you, holding behind the right thigh or calf.`],
+['Piriformis stretch (left)','Left ankle over right thigh - hold 30 sec','supine-bent',`Lie on your back, knees bent. Cross your left ankle over your right thigh, flexing your left foot.
+
+Clasp behind your right thigh and draw both legs toward your chest until you feel the stretch in your left glute.`],
+['Piriformis stretch (right)','Right ankle over left thigh - hold 30 sec','supine-bent',`Now the right side. Cross your right ankle over your left thigh, flexing your right foot.
+
+Clasp behind your left thigh and draw both legs toward your chest until you feel the stretch in your right glute.`],
+['Runner’s pose (left)','Lie on right side, stretch left quad - 20-30 sec','side-lying',`Lie on your right side. Your right leg stays slightly bent for stability.
+
+Bend your left leg backwards and hold the ankle or foot with your left hand. Gently draw the heel toward your bum.`],
+['Runner’s pose (right)','Lie on left side, stretch right quad - 20-30 sec','side-lying',`Now lie on your left side. Your left leg stays slightly bent for stability.
+
+Bend your right leg backwards and hold the ankle or foot with your right hand. Gently draw the heel toward your bum.`]
+]},
+'Band work':{icon:'🎯',defaultDur:45,exercises:[
+['Overhead band pull','Slow and steady - maintain tension','arms-up',`Hold the band close to the midline with both hands.
+
+Pull the band apart while simultaneously pushing your arms forward, then raise the whole thing up and over your head.
+
+Maintain constant tension throughout.`],
+['Crescent (left arm)','Left arm traces the D-shape - maintain tension','arms-wide',`Start with the band held in front at chest height.
+
+Your right arm stays relatively stationary. Your left arm follows a circular path overhead - tracing a large D-shape or crescent moon.`],
+['Crescent (right arm)','Right arm traces the D-shape - maintain tension','arms-wide',`Now switch. Your left arm stays relatively stationary. Your right arm follows the circular path overhead - tracing a large D-shape.`],
+['Chest press','Push straight forward - elbows in','arms-wide',`Hold the band at nipple level with elbows in and hands at chest.
+
+Push straight forward, like a laser line. Keep elbows tucked - don't let them flare.
+
+Can be done lying down or standing.`]
+]},
+'Phoenix VI':{icon:'🔥',defaultDur:60,exercises:[
+['Push ups','1-3 sets, as many reps as comfortable','plank',`Start in a plank position - hands shoulder-width or slightly wider, body in a straight line.
+
+Lower your chest toward the floor, keeping your elbows at roughly 45 degrees. Press back up.`],
+['Plank','Hold for time - focus on breathing','plank',`Hands or forearms on the floor. Body in a straight line from head to heels.
+
+Engage your core and squeeze your glutes lightly. Keep your hips level and breathe steadily.`],
+['Russian twists','Twist side to side - slow and controlled','seated-twist',`Sit with knees bent, feet either flat or lifted slightly. Lean back slightly to create tension in the core.
+
+Rotate your torso side to side - left, centre, right.`],
+['Kettlebell swings','Hip hinge - let the KB swing, not lift','squat',`Stand with feet slightly wider than hip-width. Hinge at the hips and swing the kettlebell back between your legs.
+
+Drive the hips forward to swing the bell up to chest height. The power comes from the hips, not the arms.`],
+['Seated leg raises','Slow lifts - target weak left knee','forward-bend',`Sit in a chair or on the floor. One leg bent for support, the other extended.
+
+Slowly lift the extended leg to hip height, hold for 2-3 seconds, then lower with control.`],
+['Squats','1-3 sets - depth to comfort','squat',`Stand with feet hip to shoulder-width apart, toes slightly turned out.
+
+Hinge your hips back and bend your knees, as if sitting into a chair. Press through your heels to stand.`]
+]},
+'Kettlebell':{icon:'🏋️',defaultDur:50,exercises:[
+['Shoulder circles','Slow full circles - both directions','arms-wide',`Stand or sit. Lift both arms out to the sides and make large, slow circles - forward first, then backward.
+
+Focus on full range of motion through the shoulder joint.`],
+['KB shoulder shrugs','Lift and hold - 8-10 reps','standing',`Hold a kettlebell in each hand, or one if preferred, arms by your sides.
+
+Shrug both shoulders up toward your ears and hold briefly at the top. Lower slowly.`],
+['Bent over rows','Pull elbows back - squeeze at top','kneeling-fwd',`Hinge forward at the hips, back flat, a light bend in the knees. Hold kettlebells below your chest.
+
+Pull your elbows back and up toward your hips, squeezing the shoulder blades together at the top.`],
+['KB round the world','Pass around the body - both directions','arms-wide',`Stand with feet hip-width. Hold the kettlebell in front of you at waist height.
+
+Pass it around your body in a circle, transferring from one hand to the other behind your back and in front.`],
+['KB squats','Hold KB at chest - slow and deep','squat',`Hold the kettlebell at chest height in a goblet position.
+
+Feet hip to shoulder-width, toes slightly out. Squat down, keeping the bell close and your chest up.`]
+]}
+};
+let cat='',exs=[],idx=0,dur=45,rem=45,playing=false,mode='auto',timer=null,bellOn=true,actx=null;
+const $=id=>document.getElementById(id);const fmt=s=>`${Math.floor(Math.max(0,Math.ceil(s))/60)}:${String(Math.max(0,Math.ceil(s))%60).padStart(2,'0')}`;
+function build(){const keys=Object.keys(DATA);$('cats').innerHTML=keys.map((k,i)=>`<button class='cat ${keys.length%2&&i===keys.length-1?'full':''}' data-cat='${k}'><div class='icon'>${DATA[k].icon}</div><div class='name'>${k}</div><div class='count'>${DATA[k].exercises.length} exercises</div></button>`).join('');document.querySelectorAll('.cat').forEach(b=>b.onclick=()=>pick(b.dataset.cat));}
+function pick(c){cat=c;exs=DATA[c].exercises;idx=0;dur=DATA[c].defaultDur;rem=dur;playing=false;$('catpill').textContent=c;$('home').classList.add('hidden');$('ex').classList.remove('hidden');render();syncDur();}
+function render(){const e=exs[idx];$('exname').textContent=e[0];$('cue').textContent=e[1];$('pose').textContent=pose[e[2]]||'🧘';$('dtitle').textContent=e[0];$('dcue').textContent=e[1];$('dbody').textContent=e[3];$('dots').innerHTML=exs.map((_,i)=>`<span class='dot ${i===idx?'cur':i<idx?'done':''}'></span>`).join('');$('prev').disabled=idx===0;$('next').disabled=idx===exs.length-1;update();}
+function update(){$('time').textContent=mode==='manual'?'-':fmt(rem);$('label').textContent=mode==='manual'?'manual':playing?'autoplay':'paused';$('play').textContent=mode==='manual'?'→':playing?'Ⅱ':'▶';}
+function stop(){if(timer){clearInterval(timer);timer=null;}}
+function start(){stop();timer=setInterval(()=>{rem-=.1;if(rem<=0){rem=0;stop();next(true)}update();},100);}
+function next(auto=false){if(idx<exs.length-1){idx++;rem=dur;render();if(auto)chime();if(playing&&mode==='auto')start();}else{stop();playing=false;update();$('done').classList.remove('hidden');doneSound();}}
+function prev(){if(idx>0){idx--;rem=dur;render();if(playing&&mode==='auto')start();}}
+function toggle(){if(mode==='manual'){next();return}initAudio();playing=!playing;if(playing)start();else stop();update();}
+function setMode(m){mode=m;playing=false;stop();$('auto').classList.toggle('on',m==='auto');$('manual').classList.toggle('on',m==='manual');$('durrow').classList.toggle('hidden',m==='manual');update();}
+function syncDur(){document.querySelectorAll('[data-dur]').forEach(b=>b.classList.toggle('on',Number(b.dataset.dur)===dur));}
+function setDur(n){dur=n;rem=n;syncDur();update();if(playing)start();}
+function home(){stop();playing=false;$('done').classList.add('hidden');$('ex').classList.add('hidden');$('home').classList.remove('hidden');}
+function openInfo(){$('ov').classList.add('show');$('drawer').classList.add('open')}
+function closeInfo(){$('ov').classList.remove('show');$('drawer').classList.remove('open')}
+function initAudio(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();}
+function tone(f,d=.5,v=.15,delay=0){initAudio();const o=actx.createOscillator(),g=actx.createGain(),t=actx.currentTime+delay;o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+d+.1)}
+function chime(){if(bellOn){tone(528,1.4,.16);tone(1056,1,.05)}}function doneSound(){tone(396,.45,.16);tone(330,.45,.16,.5);tone(264,1,.16,1)}
+$('back').onclick=home;$('donebtn').onclick=home;$('play').onclick=toggle;$('prev').onclick=prev;$('next').onclick=()=>next(false);$('auto').onclick=()=>setMode('auto');$('manual').onclick=()=>setMode('manual');$('info').onclick=openInfo;$('close').onclick=closeInfo;$('ov').onclick=closeInfo;$('bell').onclick=()=>{bellOn=!bellOn;$('bell').classList.toggle('on',bellOn)};document.querySelectorAll('[data-dur]').forEach(b=>b.onclick=()=>setDur(Number(b.dataset.dur)));document.addEventListener('keydown',e=>{if($('ex').classList.contains('hidden'))return;if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')prev();if(e.key===' '){e.preventDefault();toggle()}if(e.key==='Escape')home();if(e.key==='i')openInfo()});build();
+</script>
+</body>
+</html>
